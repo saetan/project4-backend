@@ -1,18 +1,30 @@
+// =======================================
+//              DEPENDENCIES
+// =======================================
+
 const express = require('express')
 const mongoose = require('mongoose')
+require('dotenv').config()
+const app = require('./app')
 
-const app = express()
-const port = 3001
+// =======================================
+//              DATABASE
+// =======================================
 
+const PORT = process.env.PORT || 8000
+const DATABASE = process.env.DATABASE
+const MONGO_USER = process.env.MONGO_USER
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD
+const MONGO_BASE_URL = process.env.MONGO_BASE_URL
+const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}/${DATABASE}?retryWrites=true&w=majority`
 
-app.get('/', (req, res) => {
-    console.log("uwu");
-    res.send('Hello World!')
-})
+// =======================================
+//              LISTENER
+// =======================================
 
-mongoose.connect("mongodb+srv://saetan:ilovebbt93@cluster0.1nhm8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority").then(async () => {
-    console.log("Database Connected")
-    app.listen(port, () => {
-        console.log(`Example app listening on port ${port}`)
+mongoose.connect(MONGO_URL).then(async () => {
+    console.log('Database Connected')
+    app.listen(PORT, () => {
+        console.log(`Example app listening on port ${PORT}`)
     })
 })
