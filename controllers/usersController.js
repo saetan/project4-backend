@@ -11,9 +11,15 @@ app.post('/new', async (req, res) => {
         console.log(user)
         res.send(user)
     } catch (error) {
+        if (error.code == 11000) {
+            res.status(401).send(
+                'Username already exist please try another username'
+            )
+            return
+        }
         res.status(401).send(error.message)
+        console.log(error.code)
         return
-        console.log(error.message)
     }
 })
 

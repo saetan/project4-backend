@@ -6,12 +6,13 @@ const SALT_WORK_FACTOR = 10
 const userSchema = new Schema({
     username: {
         type: String,
-        required: true,
+        required: [true, 'username is required'],
         unique: true,
     },
     type: {
         type: String,
         required: true,
+        enum: ['admin', 'employee', 'customer', 'supplier'],
     },
     password: {
         type: String,
@@ -21,10 +22,6 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-    },
-    employee: {
-        type: Schema.Types.ObjectId,
-        ref: 'employee',
     },
 })
 
