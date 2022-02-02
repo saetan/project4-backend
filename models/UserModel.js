@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
+const emailValidator = require('../utilities/validateEmail')
+const validateEmail = require('../utilities/validateEmail')
 const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
@@ -22,6 +24,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
+        validate: [validateEmail, 'Please fill in a valid email address'],
     },
 })
 
