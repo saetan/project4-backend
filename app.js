@@ -5,12 +5,19 @@ const express = require('express')
 const methodOverride = require('method-override')
 const cors = require('cors')
 const CORS_WHITELIST = process.env.CORS_WHITELIST
+const session = require('express-session')
+const MongoDBSession = require('connect-mongodb-session')(session)
+require('dotenv').config()
+app = express()
 
+const DATABASE = process.env.DATABASE
+const MONGO_USER = process.env.MONGO_USER
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD
+const MONGO_BASE_URL = process.env.MONGO_BASE_URL
+const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_URL}/${DATABASE}?retryWrites=true&w=majority`
 // =======================================
 //              MIDDLEWARE
 // =======================================
-
-app = express()
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(express.static('public'))
@@ -21,13 +28,29 @@ app.use(
     })
 )
 
+const store = new MongoDBSession({
+    uri: MONGO_URL,
+    collection: 'mySessions',
+})
+
+app.use(
+    session({
+        secret: process.env.SESSIONSECRET,
+        saveUninitialized: false,
+        resave: false,
+        store: store,
+    })
+)
+
 // =======================================
 //              CONTROLLERS
 // =======================================
+const sessionController = require('./controllers/sessionsController')
 const usersController = require('./controllers/usersController')
 const stockController = require('./controllers/stockController')
 const employeeController = require('./controllers/employeeController')
 
+app.use('/sessions', sessionController)
 app.use('/users', usersController)
 app.use('/stocks', stockController)
 app.use('/employees', employeeController)
