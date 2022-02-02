@@ -4,6 +4,9 @@ const User = require('../models/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+/* 
+    CREATE  NEW USER
+*/
 app.post('/new', async (req, res) => {
     console.log(req.body)
     try {
@@ -24,30 +27,33 @@ app.post('/new', async (req, res) => {
 })
 
 //verify jwt
-app.use((req, res, next) => {
-    console.log('UserController: Middleware Check Activated')
-    console.log('Request Information: ', req.headers.token)
-    if (!req.headers.token) {
-        res.status(401).send('Unauthenticated,no token, Please Login')
-        return
-    }
-    try {
-        const payload = jwt.verify(req.headers.token, process.env.SECRET)
-        console.log('current payload', payload)
-        if (payload.role !== 'admin') {
-            console.log('UserController.js: User is not admin')
-            res.status(401).send('User is not admin, Unauthourized users')
-            return
-        }
-        req.context = payload
-        next()
-    } catch (err) {
-        console.log('error message caught in user controller: ', err)
-        res.status(401).send('Expired or Invalid Token, Please Login')
-        return
-    }
-})
+// app.use((req, res, next) => {
+//     console.log('UserController: Middleware Check Activated')
+//     console.log('Request Information: ', req.headers.token)
+//     if (!req.headers.token) {
+//         res.status(401).send('Unauthenticated,no token, Please Login')
+//         return
+//     }
+//     try {
+//         const payload = jwt.verify(req.headers.token, process.env.SECRET)
+//         console.log('current payload', payload)
+//         if (payload.role !== 'admin') {
+//             console.log('UserController.js: User is not admin')
+//             res.status(401).send('User is not admin, Unauthourized users')
+//             return
+//         }
+//         req.context = payload
+//         next()
+//     } catch (err) {
+//         console.log('error message caught in user controller: ', err)
+//         res.status(401).send('Expired or Invalid Token, Please Login')
+//         return
+//     }
+// })
 
+/* 
+    CREATE  A List OF USER
+*/
 app.get('/', async (req, res) => {
     console.log('User Controller: Trying to get users')
     console.log(req.context)
@@ -63,21 +69,33 @@ app.get('/', async (req, res) => {
     }
 })
 
+/* 
+    DELETE ONE USER
+*/
+
 app.delete('/:id', async (req, res) => {
     try {
         console.log('User Controller: Trying to delete an user')
         const user = await User.findOneAndDelete({ _id: req.params.id })
-        res.send(`This ${user.username} has been deleted`)
+        res.send(`Delete Successful, User ${user.username} has been deleted`)
     } catch (error) {
         console.log('Delete User Controller Error: ' + error.message)
+        res.status(401).send(error.message)
     }
 })
 
+/* 
+    EDIT A USER
+*/
 app.put('/:id', async (req, res) => {
-    const user = await User.updateOne({ _id: req.params.id }, req.body, {
-        new: true,
-    })
-    res.send(user)
+    try {
+        const user = await User.updateOne({ _id: req.params.id }, req.body, {
+            new: true,
+        })
+        res.send(user)
+    } catch (error) {
+        res.status(401).send(error.message)
+    }
 })
 
 module.exports = app

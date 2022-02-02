@@ -5,7 +5,10 @@ const stockSchema = new Schema(
     {
         name: {
             type: String,
+            unique: true,
             required: true,
+            autoIndex: true,
+            useCreateIndex: true,
         },
         quantity: {
             type: Number,

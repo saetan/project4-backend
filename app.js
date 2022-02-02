@@ -25,6 +25,8 @@ app.use(
 //              CONTROLLERS
 // =======================================
 const usersController = require('./controllers/usersController')
+const stockController = require('./controllers/stockController')
 
 app.use('/users', usersController)
+app.use('/stocks', stockController)
 module.exports = app
