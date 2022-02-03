@@ -11,7 +11,7 @@ app.post('/login', async (req, res) => {
         })
         if (!user) {
             console.log('Session Controller: Invalid Email')
-            return res.status(401).send({
+            res.status(401).send({
                 status: 401,
                 message: 'Invalid Email',
             })
@@ -21,17 +21,17 @@ app.post('/login', async (req, res) => {
         if (!isValid) {
             console.log('Session Controller: Invalid Password')
             //unauthorised
-            return res.status(401).send({
+            res.status(401).send({
                 status: 401,
                 message: 'Invalid Password',
             })
         }
-
+        console.log(req.session.cookie)
         req.session.isAuth = true
         req.session.role = user.type
         req.session.userName = user.username
-
-        return res.status(200).send({
+        res.status(200).send({
+            status: 200,
             result: 'success',
             userName: user.username,
             role: user.type,

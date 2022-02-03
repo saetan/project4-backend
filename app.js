@@ -25,6 +25,7 @@ app.use(methodOverride('_method'))
 app.use(
     cors({
         origin: CORS_WHITELIST,
+        credentials: true,
     })
 )
 
@@ -39,6 +40,9 @@ app.use(
         saveUninitialized: false,
         resave: false,
         store: store,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24,
+        },
     })
 )
 
