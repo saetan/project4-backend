@@ -9,10 +9,24 @@ app.post('/createstock', async (req, res) => {
     console.log(req.body)
     try {
         const stock = await Stock.create(req.body)
-        res.send(stock)
+        res.status(200).send({
+            status: 200,
+            result: 'success',
+            data: stock,
+        })
     } catch (error) {
+        console.log(error.message)
+        if (error.code == 11000) {
+            let re = /\{(.*?)\}/g
+            let duplicatedVariable = re.exec(error.message)
+            let duplicatedError = `Duplicate Entries on ${duplicatedVariable[1]}`
+            res.status(401).send({
+                status: 401,
+                message: duplicatedError,
+            })
+            return
+        }
         res.status(401).send(error.message)
-        console.log(error)
     }
 })
 
