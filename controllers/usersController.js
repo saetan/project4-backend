@@ -60,7 +60,11 @@ app.get('/', async (req, res) => {
     try {
         const users = await User.find()
         console.log(users)
-        res.send(users)
+        res.send({
+            status: 200,
+            result: 'success',
+            data: users,
+        })
     } catch (err) {
         res.status(500).send(
             'Unexpected error has occured while retreiving users'
