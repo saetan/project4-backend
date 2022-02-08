@@ -2,9 +2,27 @@ const express = require('express')
 const app = express()
 const Stock = require('../models/StockModel')
 
+app.use((req, res, next) => {
+    console.log('StockController: Middleware Check Activated')
+    console.log('Request Information: current user role is: ', req.session.role)
+    try {
+        if (req.session.role !== 'admin') {
+            res.status(401).send({
+                status: 401,
+                result: 'Failed, user is not authorised to access this',
+            })
+            return
+        }
+    } catch (error) {
+        console.log('Error occurs in StockController Middleware')
+    }
+    next()
+})
+
 /* 
     Create NEW STOCK
 */
+
 app.post('/createstock', async (req, res) => {
     console.log(req.body)
     try {
@@ -37,7 +55,11 @@ app.get('/', async (req, res) => {
     try {
         const stocks = await Stock.find()
         console.log(stocks)
-        res.send(stocks)
+        res.send({
+            status: 200,
+            result: 'success',
+            data: stocks,
+        })
     } catch (error) {
         res.status(401).send(error.message)
         console.log(error.message)

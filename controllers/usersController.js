@@ -26,7 +26,7 @@ app.post('/new', async (req, res) => {
     }
 })
 
-//verify jwt
+//verify user sessions
 // app.use((req, res, next) => {
 //     console.log('UserController: Middleware Check Activated')
 //     console.log('Request Information: ', req.headers.token)

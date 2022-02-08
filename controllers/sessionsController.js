@@ -4,6 +4,20 @@ const User = require('../models/UserModel')
 require('dotenv').config()
 const app = express()
 
+app.get('/userRole', async (req, res) => {
+    console.log('Checking for user roles')
+    try {
+        if (req.session.role) {
+            res.status(200).send({
+                status: 200,
+                result: 'Success',
+                data: req.session.role,
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
 app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({
@@ -43,9 +57,13 @@ app.post('/login', async (req, res) => {
 
 app.post('/logout', (req, res) => {
     try {
+        console.log('uwu')
         req.session.destroy((err) => {
             if (err) throw err
-            res.status(200).send({ result: 'success' })
+            res.status(200).send({
+                status: 200,
+                result: 'Logout Success',
+            })
         })
     } catch (error) {
         res.status(401).send(error.message)
