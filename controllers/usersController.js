@@ -12,12 +12,17 @@ app.post('/new', async (req, res) => {
     try {
         const user = await User.create(req.body)
         console.log(user)
-        res.send(user)
+        res.status(200).send({
+            status: 200,
+            result: 'Success',
+            data: user,
+        })
     } catch (error) {
         if (error.code == 11000) {
-            res.status(401).send(
-                'Username already exist please try another username'
-            )
+            res.status(401).send({
+                status: 401,
+                result: 'Failed, user already exists',
+            })
             return
         }
         res.status(401).send(error.message)
