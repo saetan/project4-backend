@@ -128,9 +128,47 @@ app.delete('/:id', async (req, res) => {
 */
 app.put('/:id', async (req, res) => {
     try {
-        const user = await User.updateOne({ _id: req.params.id }, req.body, {
-            new: true,
-        })
+        // const user = await User.updateOne({ _id: req.params.id }, req.body, {
+        //     new: true,
+        //     rawResult: true,
+        // })
+        const user = await User.findById({ _id: req.params.id })
+        if (user) {
+            if (req.body.username) {
+                if (req.body.username !== user.username) {
+                    user.username = req.body.username
+                }
+            }
+
+            if (req.body.email) {
+                if (req.body.email !== user.email) {
+                    user.email = req.body.email
+                }
+            }
+
+            if (req.body.type) {
+                if (req.body.type !== user.type) {
+                    user.type = req.body.type
+                }
+            }
+
+            if (req.body.password) {
+                console.log('inside password: ' + req.body.password)
+                console.log(
+                    'Comparing password: ' +
+                        req.body.password +
+                        ' ' +
+                        user.password
+                )
+                if (req.body.password !== user.password) {
+                    console.log('Setting password')
+                    user.password = req.body.password
+                }
+            }
+
+            console.log('Updated User: ' + user)
+            await user.save()
+        }
         res.status(200).send({
             status: 200,
             message: 'Success',
