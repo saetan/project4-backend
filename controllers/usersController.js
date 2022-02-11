@@ -14,14 +14,14 @@ app.post('/new', async (req, res) => {
         console.log(user)
         res.status(200).send({
             status: 200,
-            result: 'Success',
+            message: 'Success',
             data: user,
         })
     } catch (error) {
         if (error.code == 11000) {
             res.status(401).send({
                 status: 401,
-                result: 'Failed, user already exists',
+                message: 'Failed, user already exists',
             })
             return
         }
@@ -67,7 +67,7 @@ app.get('/', async (req, res) => {
         console.log(users)
         res.send({
             status: 200,
-            result: 'success',
+            message: 'success',
             data: users,
         })
     } catch (err) {
@@ -86,10 +86,17 @@ app.delete('/:id', async (req, res) => {
     try {
         console.log('User Controller: Trying to delete an user')
         const user = await User.findOneAndDelete({ _id: req.params.id })
-        res.send(`Delete Successful, User ${user.username} has been deleted`)
+        console.log(`Delete Successful, User ${user.username} has been deleted`)
+        res.status(200).send({
+            status: 200,
+            message: `Delete Successful, User ${user.username} has been deleted`,
+        })
     } catch (error) {
         console.log('Delete User Controller Error: ' + error.message)
-        res.status(401).send(error.message)
+        res.status(401).send({
+            status: 401,
+            message: error.message,
+        })
     }
 })
 
