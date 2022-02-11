@@ -78,6 +78,29 @@ app.get('/', async (req, res) => {
     }
 })
 
+/*
+    Get a single user
+*/
+
+/* 
+    EDIT A USER
+*/
+app.get('/:id', async (req, res) => {
+    try {
+        const user = await User.findById({ _id: req.params.id })
+        res.status(200).send({
+            status: 200,
+            message: 'Success',
+            data: user,
+        })
+    } catch (error) {
+        res.status(401).send({
+            status: 401,
+            message: error.message,
+        })
+    }
+})
+
 /* 
     DELETE ONE USER
 */
@@ -108,9 +131,14 @@ app.put('/:id', async (req, res) => {
         const user = await User.updateOne({ _id: req.params.id }, req.body, {
             new: true,
         })
-        res.send(user)
+        res.status(200).send({
+            status: 200,
+            message: 'Success',
+            data: user,
+        })
+        console.log(user)
     } catch (error) {
-        res.status(401).send(error.message)
+        res.status(401).send({ status: 401, message: error.message })
     }
 })
 
