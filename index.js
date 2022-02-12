@@ -21,9 +21,16 @@ const MONGO_URL = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_BASE_UR
 //              LISTENER
 // =======================================
 
-mongoose.connect(MONGO_URL).then(async () => {
-    console.log('Database Connected')
-    app.listen(PORT, () => {
-        console.log(`Example app listening on port ${PORT}`)
+mongoose
+    .connect(MONGO_URL, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        // useCreateIndex: true, //make this true
+        autoIndex: true, //make this also true
     })
-})
+    .then(async () => {
+        console.log('Database Connected')
+        app.listen(PORT, () => {
+            console.log(`Example app listening on port ${PORT}`)
+        })
+    })

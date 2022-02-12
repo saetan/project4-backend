@@ -34,6 +34,7 @@ app.post('/createstock', async (req, res) => {
         })
     } catch (error) {
         console.log(error.message)
+        console.log(error.code)
         if (error.code == 11000) {
             let re = /\{(.*?)\}/g
             let duplicatedVariable = re.exec(error.message)
