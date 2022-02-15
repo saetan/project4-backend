@@ -68,6 +68,26 @@ app.get('/', async (req, res) => {
 })
 
 /*
+    EDIT OF STOCK
+
+*/
+app.get('/:id', async (req, res) => {
+    try {
+        const stock = await Stock.findById({ _id: req.params.id })
+        res.status(200).send({
+            status: 200,
+            message: 'Success',
+            data: stock,
+        })
+    } catch (error) {
+        res.status(401).send({
+            status: 401,
+            message: error.message,
+        })
+    }
+})
+
+/*
     UPDATE OF CURRENT STOCK
 */
 
@@ -88,12 +108,16 @@ app.put('/:id', async (req, res) => {
 
 app.delete('/:id', async (req, res) => {
     try {
-        console.log('User Controller: Trying to delete an user')
+        console.log('User Controller: Trying to delete an stock')
         const stock = await Stock.findOneAndDelete({ _id: req.params.id })
-        res.send(`Delete Successful, Stock ${stock.name} has been deleted`)
+        console.log(stock)
+        res.send({
+            status: 200,
+            message: `Delete Successful, Stock ${stock.name} has been deleted`,
+        })
     } catch (error) {
-        console.log('Delete User Controller Error: ' + error.message)
-        res.status(401).send(error.message)
+        console.log('Delete Stock Controller Error: ' + error.message)
+        res.status(401).send({ status: 401, message: error.message })
     }
 })
 
