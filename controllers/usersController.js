@@ -83,7 +83,7 @@ app.get('/', async (req, res) => {
 */
 
 /* 
-    EDIT A USER
+    GET A USER
 */
 app.get('/:id', async (req, res) => {
     try {

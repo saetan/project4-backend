@@ -68,17 +68,22 @@ app.get('/', async (req, res) => {
 })
 
 /*
-    EDIT OF STOCK
+    Retrieve single stock
 
 */
 app.get('/:id', async (req, res) => {
+    console.log('Get Single Stock Triggered!')
     try {
         const stock = await Stock.findById({ _id: req.params.id })
-        res.status(200).send({
-            status: 200,
-            message: 'Success',
-            data: stock,
-        })
+        if (stock) {
+            console.log('Retrieved single stock: ' + stock)
+            console.log('Success')
+            res.status(200).send({
+                status: 200,
+                message: 'Success',
+                data: stock,
+            })
+        }
     } catch (error) {
         res.status(401).send({
             status: 401,
@@ -92,11 +97,19 @@ app.get('/:id', async (req, res) => {
 */
 
 app.put('/:id', async (req, res) => {
+    console.log('Stock PUT triggered')
     try {
         const stock = await Stock.updateOne({ _id: req.params.id }, req.body, {
             new: true,
         })
-        res.send(stock)
+        if (stock) {
+            console.log('Edited Stock Data: ' + stock)
+            res.status(200).send({
+                status: 200,
+                data: stock,
+                message: 'Success',
+            })
+        }
     } catch (error) {
         res.status(401).send(error.message)
     }
