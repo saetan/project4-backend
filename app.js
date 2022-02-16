@@ -53,10 +53,12 @@ const sessionController = require('./controllers/sessionsController')
 const usersController = require('./controllers/usersController')
 const stockController = require('./controllers/stockController')
 const employeeController = require('./controllers/employeeController')
+const ordersController = require('./controllers/ordersController')
 
 app.use('/sessions', sessionController)
 app.use('/users', usersController)
 app.use('/stocks', stockController)
 app.use('/employees', employeeController)
+app.use('/orders', ordersController)
 
 module.exports = app
