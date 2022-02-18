@@ -6,6 +6,9 @@ require('dotenv').config()
 const app = express()
 
 console.log('Outgoing Controllers Activated')
+
+/* Outgoing */
+
 app.get('/outgoing', async (req, res) => {
     console.log('Order Controllers: Getting Outgoing orders')
     try {
@@ -21,6 +24,52 @@ app.get('/outgoing', async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
+    }
+})
+
+//get one
+app.get('/outgoing/:id', async (req, res) => {
+    console.log('Get Single Order Triggered!')
+    try {
+        const order = await OutgoingOrders.findById({ _id: req.params.id })
+        if (order) {
+            console.log('Retrieved single order: ' + order)
+            console.log('Success')
+            res.status(200).send({
+                status: 200,
+                message: 'Success',
+                data: order,
+            })
+        }
+    } catch (error) {
+        res.status(401).send({
+            status: 401,
+            message: error.message,
+        })
+    }
+})
+
+//edit outgoing
+app.put('/outgoing/:id', async (req, res) => {
+    console.log('outgoing PUT triggered')
+    try {
+        const order = await OutgoingOrders.updateOne(
+            { _id: req.params.id },
+            req.body,
+            {
+                new: true,
+            }
+        )
+        if (order) {
+            console.log('Edited Incoming Data: ' + order)
+            res.status(200).send({
+                status: 200,
+                data: order,
+                message: 'Success',
+            })
+        }
+    } catch (error) {
+        res.status(401).send(error.message)
     }
 })
 
@@ -65,7 +114,9 @@ app.delete('/outgoing/:id', async (req, res) => {
         })
     }
 })
+/* Incoming */
 
+//get a list
 app.get('/incoming', async (req, res) => {
     console.log('Order Controllers: Getting Incoming orders')
     try {
@@ -84,6 +135,53 @@ app.get('/incoming', async (req, res) => {
     }
 })
 
+//get one
+app.get('/incoming/:id', async (req, res) => {
+    console.log('Get Single Order Triggered!')
+    try {
+        const order = await IncomingOrders.findById({ _id: req.params.id })
+        if (order) {
+            console.log('Retrieved single order: ' + order)
+            console.log('Success')
+            res.status(200).send({
+                status: 200,
+                message: 'Success',
+                data: order,
+            })
+        }
+    } catch (error) {
+        res.status(401).send({
+            status: 401,
+            message: error.message,
+        })
+    }
+})
+
+//edit incoming
+app.put('/incoming/:id', async (req, res) => {
+    console.log('Incoming PUT triggered')
+    try {
+        const order = await IncomingOrders.updateOne(
+            { _id: req.params.id },
+            req.body,
+            {
+                new: true,
+            }
+        )
+        if (order) {
+            console.log('Edited Incoming Data: ' + order)
+            res.status(200).send({
+                status: 200,
+                data: order,
+                message: 'Success',
+            })
+        }
+    } catch (error) {
+        res.status(401).send(error.message)
+    }
+})
+
+//create
 app.post('/incoming', async (req, res) => {
     console.log('Order Controllers: Creating outgoing order')
     try {
@@ -104,6 +202,7 @@ app.post('/incoming', async (req, res) => {
     }
 })
 
+//delete
 app.delete('/incoming/:id', async (req, res) => {
     try {
         console.log('OrderController: Trying to delete an Order')
