@@ -7,6 +7,7 @@ app.use((req, res, next) => {
     console.log('Request Information: current user role is: ', req.session.role)
     try {
         if (req.session.role !== 'admin') {
+            console.log('User is not bbt')
             res.status(401).send({
                 status: 401,
                 result: 'Failed, user is not authorised to access this',
