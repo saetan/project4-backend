@@ -2,6 +2,7 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const OutgoingOrders = require('../models/OutgoingOrderModel')
 const IncomingOrders = require('../models/IncomingOrderModel')
+const Stocks = require('../models/StockModel')
 require('dotenv').config()
 const app = express()
 
@@ -222,6 +223,34 @@ app.delete('/incoming/:id', async (req, res) => {
             status: 401,
             message: error.message,
         })
+    }
+})
+
+//Increase stock through incoming and decrease through outgoing
+app.post('/incoming/approved/:id', async (req, res) => {
+    console.log('Inside Order Controller: Incoming approved middleware')
+    const filter = { skuID: req.body.skuID }
+    console.log(req.body)
+    try {
+        console.log('Finding req.body.skuID in Stock')
+        const currentStock = await Stocks.findOne(filter)
+        if (currentStock) {
+            try {
+                console.log('stockFound: ' + currentStock)
+                console.log('Proceed to add quanity')
+                currentStock.quantity += req.body.quantity
+                console.log(currentStock)
+                currentStock.save()
+                res.status(200).send({
+                    status: 200,
+                    message: `Successfully updated ${currentStock.stockName}`,
+                })
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+    } catch (error) {
+        console.log('error.message')
     }
 })
 
