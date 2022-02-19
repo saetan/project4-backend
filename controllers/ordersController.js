@@ -115,6 +115,34 @@ app.delete('/outgoing/:id', async (req, res) => {
         })
     }
 })
+
+//handle outgoing completed
+app.post('/outgoing/completed/:id', async (req, res) => {
+    console.log('Inside Order Controller: Incoming approved middleware')
+    const filter = { skuID: req.body.skuID }
+    console.log(req.body)
+    try {
+        console.log('Finding req.body.skuID in Stock')
+        const currentStock = await Stocks.findOne(filter)
+        if (currentStock) {
+            try {
+                console.log('stockFound: ' + currentStock)
+                console.log('Proceed to add quanity')
+                currentStock.quantity -= req.body.quantity
+                console.log(currentStock)
+                currentStock.save()
+                res.status(200).send({
+                    status: 200,
+                    message: `Successfully updated ${currentStock.stockName}`,
+                })
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+    } catch (error) {
+        console.log('error.message')
+    }
+})
 /* Incoming */
 
 //get a list
