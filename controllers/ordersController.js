@@ -91,6 +91,13 @@ app.post('/outgoing', async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
+        if (error.code == 11000) {
+            res.status(401).send({
+                status: 401,
+                message: 'Failed, user already exists',
+            })
+            return
+        }
     }
 })
 
@@ -118,7 +125,7 @@ app.delete('/outgoing/:id', async (req, res) => {
 
 //handle outgoing completed
 app.post('/outgoing/completed/:id', async (req, res) => {
-    console.log('Inside Order Controller: Incoming approved middleware')
+    console.log('Inside Order Controller: outgoing complete middleware')
     const filter = { skuID: req.body.skuID }
     console.log(req.body)
     try {
@@ -212,14 +219,12 @@ app.put('/incoming/:id', async (req, res) => {
 
 //create
 app.post('/incoming', async (req, res) => {
-    console.log('Order Controllers: Creating outgoing order')
+    console.log('Order Controllers: Creating incoming order')
     try {
         console.log(req.body)
         const order = await IncomingOrders.create(req.body)
         if (order) {
-            console.log(
-                'Order Controllers: Outgoing orders created successfully'
-            )
+            console.log('Create incoming order')
             res.status(200).send({
                 status: 200,
                 result: 'success',
@@ -228,6 +233,13 @@ app.post('/incoming', async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
+        if (error.code == 11000) {
+            res.status(401).send({
+                status: 401,
+                message: 'Failed, user already exists',
+            })
+            return
+        }
     }
 })
 
