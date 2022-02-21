@@ -19,6 +19,10 @@ app.use((req, res, next) => {
     }
     next()
 })
+/*
+ Bulk Create
+*/
+app.post('/bulk', async (req, res) => {})
 
 /* 
     Create NEW STOCK
