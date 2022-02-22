@@ -2,12 +2,13 @@ const express = require('express')
 const app = express()
 const Stock = require('../models/StockModel')
 
+/* Middleware Check */
 app.use((req, res, next) => {
     console.log('StockController: Middleware Check Activated')
     console.log('Request Information: current user role is: ', req.session.role)
     try {
         if (req.session.role !== 'admin') {
-            console.log('User is not bbt')
+            console.log('User is not admin')
             res.status(401).send({
                 status: 401,
                 result: 'Failed, user is not authorised to access this',
@@ -22,7 +23,22 @@ app.use((req, res, next) => {
 /*
  Bulk Create
 */
-app.post('/bulk', async (req, res) => {})
+app.post('/bulk', async (req, res) => {
+    console.log('Doing Bulk Create for Stocks')
+    try {
+        const bulkStock = await Stock.create(req.body)
+        if (bulkStock) {
+            console.log('success')
+            res.status(200).send({
+                result: 200,
+                message: 'Success',
+            })
+        }
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send(error.message)
+    }
+})
 
 /* 
     Create NEW STOCK
