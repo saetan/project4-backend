@@ -34,6 +34,7 @@ const store = new MongoDBSession({
     collection: 'mySessions',
 })
 
+app.set('trust proxy', 1)
 app.use(
     session({
         secret: process.env.SESSIONSECRET,
