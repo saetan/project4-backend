@@ -39,6 +39,7 @@ app.use(
         secret: process.env.SESSIONSECRET,
         saveUninitialized: false,
         resave: false,
+        secureProxy: true,
         store: store,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24,
