@@ -4,6 +4,25 @@ const User = require('../models/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+/* Middleware Check */
+app.use((req, res, next) => {
+    console.log('StockController: Middleware Check Activated')
+    console.log('Request Information: current user role is: ', req.session.role)
+    try {
+        if (req.session.role !== 'admin') {
+            console.log('User is not admin')
+            res.status(401).send({
+                status: 401,
+                result: 'Failed, user is not authorised to access this',
+            })
+            return
+        }
+    } catch (error) {
+        console.log('Error occurs in StockController Middleware')
+    }
+    next()
+})
+
 /* 
     CREATE  NEW USER
 */
@@ -30,31 +49,6 @@ app.post('/new', async (req, res) => {
         return
     }
 })
-
-//verify user sessions
-// app.use((req, res, next) => {
-//     console.log('UserController: Middleware Check Activated')
-//     console.log('Request Information: ', req.headers.token)
-//     if (!req.headers.token) {
-//         res.status(401).send('Unauthenticated,no token, Please Login')
-//         return
-//     }
-//     try {
-//         const payload = jwt.verify(req.headers.token, process.env.SECRET)
-//         console.log('current payload', payload)
-//         if (payload.role !== 'admin') {
-//             console.log('UserController.js: User is not admin')
-//             res.status(401).send('User is not admin, Unauthourized users')
-//             return
-//         }
-//         req.context = payload
-//         next()
-//     } catch (err) {
-//         console.log('error message caught in user controller: ', err)
-//         res.status(401).send('Expired or Invalid Token, Please Login')
-//         return
-//     }
-// })
 
 /* 
     CREATE  A List OF USER

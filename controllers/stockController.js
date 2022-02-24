@@ -7,7 +7,7 @@ app.use((req, res, next) => {
     console.log('StockController: Middleware Check Activated')
     console.log('Request Information: current user role is: ', req.session.role)
     try {
-        if (req.session.role !== 'admin') {
+        if (req.session.role !== 'admin' && req.session.role !== 'employee') {
             console.log('User is not admin')
             res.status(401).send({
                 status: 401,
