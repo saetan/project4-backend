@@ -4,6 +4,21 @@ const User = require('../models/UserModel')
 require('dotenv').config()
 const app = express()
 
+app.get('/check', async (req, res) => {
+    if (req.session.id) {
+        console.log('has session, and valid')
+        res.status(200).send({
+            status: 200,
+            message: 'Session is valid',
+        })
+    } else {
+        res.status(401).send({
+            status: 401,
+            message: 'session is not valid',
+        })
+    }
+})
+
 app.get('/userRole', async (req, res) => {
     console.log('Checking for user roles')
     try {
