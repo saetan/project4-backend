@@ -35,7 +35,16 @@ app.post('/bulk', async (req, res) => {
             })
         }
     } catch (error) {
+        if (error.code == 11000) {
+            let re = /\{(.*?)\}/g
+            let duplicatedVariable = re.exec(error.message)
+            let duplicatedError = `Duplicate Entries on ${duplicatedVariable[1]}`
+            console.log('sending: ' + duplicatedError)
+            res.status(401).send(duplicatedError)
+            return
+        }
         console.log(error.message)
+        console.log('sending: ' + error.message)
         res.status(500).send(error.message)
     }
 })
@@ -60,13 +69,12 @@ app.post('/createstock', async (req, res) => {
             let re = /\{(.*?)\}/g
             let duplicatedVariable = re.exec(error.message)
             let duplicatedError = `Duplicate Entries on ${duplicatedVariable[1]}`
-            res.status(401).send({
-                status: 401,
-                message: duplicatedError,
-            })
+            console.log('sending: ' + duplicatedError)
+            res.status(401).send(duplicatedError)
             return
         }
-        res.status(401).send(error.message)
+        console.log('sending uwu')
+        res.status(401).send(duplicatedError)
     }
 })
 

@@ -35,32 +35,32 @@ const store = new MongoDBSession({
 })
 
 app.set('trust proxy', 1)
-app.use(
-    session({
-        secret: process.env.SESSIONSECRET,
-        saveUninitialized: false,
-        resave: false,
-        proxy: true,
-        store: store,
-        cookie: {
-            secure: true,
-            maxAge: 1000 * 60 * 60 * 24,
-            sameSite: 'none',
-        },
-    })
-)
-
 // app.use(
 //     session({
 //         secret: process.env.SESSIONSECRET,
 //         saveUninitialized: false,
 //         resave: false,
+//         proxy: true,
 //         store: store,
 //         cookie: {
+//             secure: true,
 //             maxAge: 1000 * 60 * 60 * 24,
+//             sameSite: 'none',
 //         },
 //     })
 // )
+
+app.use(
+    session({
+        secret: process.env.SESSIONSECRET,
+        saveUninitialized: false,
+        resave: false,
+        store: store,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24,
+        },
+    })
+)
 
 // =======================================
 //              CONTROLLERS
